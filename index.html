@@ -6,6 +6,7 @@
 <title>Dice Lockbox Creator</title>
 
 <style>
+
 *{
     box-sizing:border-box;
 }
@@ -67,63 +68,88 @@ button:hover{
 
 textarea{
     width:100%;
-    height:150px;
+    height:140px;
     padding:10px;
     border:none;
     border-radius:8px;
 }
+
+.copyBtn{
+    margin-top:10px;
+}
+
 </style>
 </head>
 <body>
 
 <div class="container">
+
 <div class="card">
 
 <h1>Dice Lockbox Creator</h1>
 
+<h2>Opponent</h2>
+
+<label>Opponent Name</label>
+<input id="opponentName"
+       placeholder="e.g. Sarah">
+
 <h2>Cover Asset</h2>
+
 <label>Cover Image URL</label>
 <input id="coverImage">
 
 <label>Starting Coin Value</label>
-<input id="coverValue" type="number">
+<input id="coverValue"
+       type="number">
 
 <h2>Stage 1 Asset</h2>
+
 <label>Image URL</label>
 <input id="stage1Image">
 
 <label>Coin Value</label>
-<input id="stage1Value" type="number">
+<input id="stage1Value"
+       type="number">
 
 <h2>Stage 2 Asset</h2>
+
 <label>Image URL</label>
 <input id="stage2Image">
 
 <label>Coin Value</label>
-<input id="stage2Value" type="number">
+<input id="stage2Value"
+       type="number">
 
 <h2>Stage 3 Asset</h2>
+
 <label>Image URL</label>
 <input id="stage3Image">
 
 <label>Coin Value</label>
-<input id="stage3Value" type="number">
+<input id="stage3Value"
+       type="number">
 
 <h2>Stage 4 Asset</h2>
+
 <label>Image URL</label>
 <input id="stage4Image">
 
 <label>Coin Value</label>
-<input id="stage4Value" type="number">
+<input id="stage4Value"
+       type="number">
 
 <h2>Stage 5 Asset</h2>
+
 <label>Image URL</label>
 <input id="stage5Image">
 
 <label>Coin Value</label>
-<input id="stage5Value" type="number">
+<input id="stage5Value"
+       type="number">
 
 <h2>Bonus Reward</h2>
+
 <label>Bonus Image URL</label>
 <input id="bonusImage">
 
@@ -136,6 +162,7 @@ Generate Lockbox Link
 <div id="output"></div>
 
 </div>
+
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
@@ -146,79 +173,204 @@ function generateLink(){
 
     const data = {
 
-        cover:{
-            image:document.getElementById("coverImage").value,
-            value:Number(document.getElementById("coverValue").value)
+        opponent:
+
+            document.getElementById(
+                "opponentName"
+            ).value ||
+
+            "Computer",
+
+        cover: {
+
+            image:
+
+                document.getElementById(
+                    "coverImage"
+                ).value,
+
+            value:
+
+                Number(
+
+                    document.getElementById(
+                        "coverValue"
+                    ).value
+
+                )
+
         },
 
-        assets:[
+        assets: [
 
             {
-                image:document.getElementById("stage1Image").value,
-                value:Number(document.getElementById("stage1Value").value)
+
+                image:
+
+                    document.getElementById(
+                        "stage1Image"
+                    ).value,
+
+                value:
+
+                    Number(
+
+                        document.getElementById(
+                            "stage1Value"
+                        ).value
+
+                    )
+
             },
 
             {
-                image:document.getElementById("stage2Image").value,
-                value:Number(document.getElementById("stage2Value").value)
+
+                image:
+
+                    document.getElementById(
+                        "stage2Image"
+                    ).value,
+
+                value:
+
+                    Number(
+
+                        document.getElementById(
+                            "stage2Value"
+                        ).value
+
+                    )
+
             },
 
             {
-                image:document.getElementById("stage3Image").value,
-                value:Number(document.getElementById("stage3Value").value)
+
+                image:
+
+                    document.getElementById(
+                        "stage3Image"
+                    ).value,
+
+                value:
+
+                    Number(
+
+                        document.getElementById(
+                            "stage3Value"
+                        ).value
+
+                    )
+
             },
 
             {
-                image:document.getElementById("stage4Image").value,
-                value:Number(document.getElementById("stage4Value").value)
+
+                image:
+
+                    document.getElementById(
+                        "stage4Image"
+                    ).value,
+
+                value:
+
+                    Number(
+
+                        document.getElementById(
+                            "stage4Value"
+                        ).value
+
+                    )
+
             },
 
             {
-                image:document.getElementById("stage5Image").value,
-                value:Number(document.getElementById("stage5Value").value)
+
+                image:
+
+                    document.getElementById(
+                        "stage5Image"
+                    ).value,
+
+                value:
+
+                    Number(
+
+                        document.getElementById(
+                            "stage5Value"
+                        ).value
+
+                    )
+
             }
 
         ],
 
-        bonus:document.getElementById("bonusImage").value
+        bonus:
+
+            document.getElementById(
+                "bonusImage"
+            ).value
 
     };
 
     const compressed =
+
         LZString.compressToEncodedURIComponent(
+
             JSON.stringify(data)
+
         );
 
     const url =
-        window.location.origin +
-        window.location.pathname.replace(
-            /[^/]*$/,
+
+        location.origin +
+
+        location.pathname.replace(
+
+            "index.html",
+
             "play.html"
+
         ) +
+
         "#" +
+
         compressed;
 
-    document.getElementById("output").innerHTML = `
-        <h2>Share Link</h2>
+    document.getElementById(
+        "output"
+    ).innerHTML =
 
-        <textarea id="generatedLink">${url}</textarea>
+    `
+    <h2>Share Link</h2>
 
-        <button onclick="copyLink()">
-            Copy Link
-        </button>
+    <textarea
+        id="generatedLink">${url}</textarea>
+
+    <button
+        class="copyBtn"
+        onclick="copyLink()">
+        Copy Link
+    </button>
     `;
+
 }
 
 function copyLink(){
 
     const text =
+
         document.getElementById(
             "generatedLink"
         ).value;
 
-    navigator.clipboard.writeText(text);
+    navigator.clipboard
+        .writeText(text);
 
-    alert("Link copied!");
+    alert(
+        "Link copied!"
+    );
+
 }
 
 </script>
