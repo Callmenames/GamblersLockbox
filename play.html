@@ -7,12 +7,17 @@
 
 <style>
 
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
 body{
     background:#111;
     color:white;
-    font-family:Arial,sans-serif;
     padding:20px;
-    margin:0;
 }
 
 .container{
@@ -20,10 +25,14 @@ body{
     margin:auto;
 }
 
+.hidden{
+    display:none;
+}
+
 .card{
     background:#1c1c1c;
-    padding:20px;
     border-radius:12px;
+    padding:20px;
     margin-bottom:20px;
 }
 
@@ -31,32 +40,62 @@ body{
     text-align:center;
 }
 
-.hidden{
-    display:none;
-}
-
 img{
     max-width:100%;
     border-radius:10px;
 }
 
-button{
-    background:#00b894;
-    color:white;
-    border:none;
-    padding:15px 25px;
-    border-radius:10px;
-    font-size:18px;
-    cursor:pointer;
+.coins{
+    font-size:24px;
+    font-weight:bold;
+    text-align:center;
+    margin:15px 0;
 }
 
-button:hover{
+button{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:18px;
+    margin-top:10px;
+}
+
+.primary{
+    background:#00b894;
+    color:white;
+}
+
+.primary:hover{
     background:#00a383;
 }
 
-.coins{
+.secondary{
+    background:#444;
+    color:white;
+}
+
+.secondary:hover{
+    background:#555;
+}
+
+.dice{
+    font-size:80px;
+    text-align:center;
+    margin:20px 0;
+}
+
+.subtitle{
+    text-align:center;
+    font-size:22px;
+    margin-bottom:15px;
+}
+
+.resultText{
+    text-align:center;
     font-size:24px;
-    margin:15px 0;
+    margin-top:20px;
 }
 
 .gallery{
@@ -67,8 +106,7 @@ button:hover{
 }
 
 .gallery img{
-    width:100%;
-    height:200px;
+    height:220px;
     object-fit:cover;
 }
 
@@ -78,67 +116,218 @@ button:hover{
 
 <div class="container">
 
-<div id="loading" class="card center">
-Loading...
+<!-- LOADING -->
+
+<div id="loading"
+     class="card center">
+
+    Loading...
+
 </div>
 
-<div id="coverScreen" class="card center hidden">
+<!-- COVER -->
+
+<div id="coverScreen"
+     class="card center hidden">
+
+    <h1>Dice Lockbox</h1>
 
     <img id="coverImage">
 
     <br><br>
 
-    <button onclick="startGame()">
-        Start Game
+    <button
+        class="primary"
+        onclick="startGame()">
+
+        Start
+
     </button>
 
 </div>
 
-<div id="gameScreen" class="card center hidden">
+<!-- MAIN GAME -->
 
-    <div class="coins">
-        Player Coins:
-        <span id="playerCoins">100</span>
+<div id="gameScreen"
+     class="hidden">
+
+    <div class="card">
+
+        <div class="coins">
+
+            Your Coins:
+            <span id="playerCoins"></span>
+
+        </div>
+
+        <div class="coins">
+
+            <span id="opponentName">
+                Opponent
+            </span>
+
+            Coins:
+
+            <span id="computerCoins"></span>
+
+        </div>
+
     </div>
 
-    <div class="coins">
-        Computer Coins:
-        <span id="computerCoins">0</span>
+    <!-- ROLL PHASE -->
+
+    <div id="rollPhase"
+         class="card center">
+
+        <h2>Roll Your Dice</h2>
+
+        <button
+            class="primary"
+            onclick="rollPlayerDice()">
+
+            Roll
+
+        </button>
+
     </div>
 
-    <button onclick="rollDice()">
-        Roll Dice
-    </button>
+    <!-- DECISION PHASE -->
 
-    <div
-        id="diceResult"
-        style="margin-top:20px;font-size:20px;">
+    <div id="decisionPhase"
+         class="card hidden">
+
+        <h2 class="center">
+            Your Roll
+        </h2>
+
+        <div id="playerDice"
+             class="dice">
+
+        </div>
+
+        <div class="center">
+            Choose your move
+        </div>
+
+        <button
+            class="secondary"
+            onclick="foldRound()">
+
+            Fold (-10)
+
+        </button>
+
+        <button
+            class="primary"
+            onclick="playRound(20)">
+
+            Bet (-20)
+
+        </button>
+
+        <button
+            class="primary"
+            onclick="playRound(40)">
+
+            Double (-40)
+
+        </button>
+
     </div>
 
-    <div
-        id="gallery"
-        class="gallery">
+    <!-- ACQUIRED ASSETS -->
+
+    <div class="card">
+
+        <h2>
+            Assets Acquired
+        </h2>
+
+        <div id="gallery"
+             class="gallery">
+
+        </div>
+
     </div>
 
 </div>
 
-<div id="assetReveal" class="card center hidden">
+<!-- RESULT SCREEN -->
+
+<div id="resultScreen"
+     class="card center hidden">
+
+    <h2>Round Result</h2>
+
+    <br>
+
+    <h3>Your Roll</h3>
+
+    <div id="resultPlayerDice"
+         class="dice">
+
+    </div>
+
+    <h3 id="resultOpponentName">
+        Opponent Roll
+    </h3>
+
+    <div id="resultComputerDice"
+         class="dice">
+
+    </div>
+
+    <div id="resultMessage"
+         class="resultText">
+
+    </div>
+
+    <button
+        class="primary"
+        onclick="nextRound()">
+
+        Next
+
+    </button>
+
+</div>
+
+<!-- ASSET REVEAL -->
+
+<div id="assetReveal"
+     class="card center hidden">
 
     <h2>
-        Computer Sold An Asset
+        Asset Acquired
     </h2>
+
+    <br>
 
     <img id="soldImage">
 
-    <p id="soldValue"></p>
+    <br><br>
 
-    <button onclick="continueGame()">
+    <div id="soldValue"
+         class="resultText">
+
+    </div>
+
+    <br>
+
+    <button
+        class="primary"
+        onclick="continueGame()">
+
         Continue
+
     </button>
 
 </div>
 
-<div id="victoryScreen" class="card center hidden">
+<!-- VICTORY -->
+
+<div id="victoryScreen"
+     class="card center hidden">
 
     <h1>
         You Win!
@@ -146,15 +335,23 @@ Loading...
 
     <br>
 
+    <h2>
+        Bonus Reward
+    </h2>
+
+    <br>
+
     <img id="bonusImage">
+
+    <br><br>
 
     <h2>
         Complete Collection
     </h2>
 
-    <div
-        id="finalGallery"
-        class="gallery">
+    <div id="finalGallery"
+         class="gallery">
+
     </div>
 
 </div>
@@ -162,6 +359,7 @@ Loading...
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
+
 <script src="js/play.js"></script>
 
 </body>
