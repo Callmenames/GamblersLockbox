@@ -190,9 +190,9 @@ function generateLink(){
         );
 
     const url =
-        location.origin +
-        location.pathname.replace(
-            "index.html",
+        window.location.origin +
+        window.location.pathname.replace(
+            /[^/]*$/,
             "play.html"
         ) +
         "#" +
