@@ -323,19 +323,16 @@ function generateLink(){
 
     const url =
 
-        location.origin +
+    location.origin +
 
-        location.pathname.replace(
+    location.pathname.replace(
+        /\/$/,
+        "/play.html"
+    ) +
 
-            "index.html",
+    "#" +
 
-            "play.html"
-
-        ) +
-
-        "#" +
-
-        compressed;
+    compressed;
 
     document.getElementById(
         "output"
