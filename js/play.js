@@ -495,16 +495,19 @@ function processComputerLoss(){
         gameData.assets[
             currentAsset
         ];
-
+    
     playerCoins -=
         asset.value;
-
+    
+    computerCoins +=
+        asset.value;
+    
     acquiredAssets.push(
         asset.image
     );
-
+    
     currentAsset++;
-
+    
     updateCoins();
 
     saveProgress();
