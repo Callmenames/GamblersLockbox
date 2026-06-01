@@ -261,13 +261,9 @@ function rollPlayerDice(){
     document.getElementById(
         "playerDice"
     ).textContent =
-        diceFaces[
-            playerDice[0]
-        ] +
-        " " +
-        diceFaces[
-            playerDice[1]
-        ];
+        diceFaces[playerDice[0]]
+        + " " +
+        diceFaces[playerDice[1]];
 
     document.getElementById(
         "rollPhase"
@@ -284,10 +280,8 @@ function rollPlayerDice(){
 }
 
 function foldRound(){
-function foldRound(){
 
     playerCoins -= 10;
-
     computerCoins += 10;
 
     updateCoins();
@@ -312,23 +306,11 @@ function foldRound(){
 
 function playRound(betAmount){
 
-    if(
-        playerCoins < betAmount
-    ){
+    if(playerCoins < betAmount){
 
         alert(
             "Not enough coins."
         );
-
-        return;
-
-    }
-
-    if(
-        computerCoins <= 0
-    ){
-
-        processComputerLoss();
 
         return;
 
@@ -391,11 +373,8 @@ function playRound(betAmount){
     }
     else{
 
-        playerCoins +=
-            playerBet;
-
-        computerCoins +=
-            computerBet;
+        playerCoins += playerBet;
+        computerCoins += computerBet;
 
         message =
             "Tie. Bets returned.";
@@ -407,24 +386,16 @@ function playRound(betAmount){
     document.getElementById(
         "resultPlayerDice"
     ).textContent =
-        diceFaces[
-            playerDice[0]
-        ] +
-        " " +
-        diceFaces[
-            playerDice[1]
-        ];
+        diceFaces[playerDice[0]]
+        + " " +
+        diceFaces[playerDice[1]];
 
     document.getElementById(
         "resultComputerDice"
     ).textContent =
-        diceFaces[
-            computerDice[0]
-        ] +
-        " " +
-        diceFaces[
-            computerDice[1]
-        ];
+        diceFaces[computerDice[0]]
+        + " " +
+        diceFaces[computerDice[1]];
 
     document.getElementById(
         "resultMessage"
@@ -455,9 +426,7 @@ function nextRound(){
         "hidden"
     );
 
-    if(
-        playerCoins <= 0
-    ){
+    if(playerCoins <= 0){
 
         gameOver();
 
@@ -465,9 +434,7 @@ function nextRound(){
 
     }
 
-    if(
-        computerCoins <= 0
-    ){
+    if(computerCoins <= 0){
 
         processComputerLoss();
 
