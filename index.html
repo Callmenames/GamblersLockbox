@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dice Lockbox Creator</title>
+<title>Gamblers Lockbox Creator</title>
 
 <style>
 
@@ -72,6 +72,7 @@ textarea{
     padding:10px;
     border:none;
     border-radius:8px;
+    resize:none;
 }
 
 .copyBtn{
@@ -86,69 +87,71 @@ textarea{
 
 <div class="card">
 
-<h1>Dice Lockbox Creator</h1>
+<h1>Gamblers Lockbox Creator</h1>
 
 <h2>Opponent</h2>
 
 <label>Opponent Name</label>
-<input id="opponentName"
-       placeholder="e.g. Sarah">
+<input
+    id="opponentName"
+    placeholder="e.g. Sarah">
 
-<h2>Cover Asset</h2>
+<h2>Cover</h2>
 
 <label>Cover Image URL</label>
 <input id="coverImage">
 
-<label>Starting Coin Value</label>
-<input id="coverValue"
-       type="number">
-
-<h2>Stage 1 Asset</h2>
+<h2>Picture 1</h2>
 
 <label>Image URL</label>
 <input id="stage1Image">
 
-<label>Coin Value</label>
-<input id="stage1Value"
-       type="number">
+<label>Purchase Price</label>
+<input
+    id="stage1Value"
+    type="number">
 
-<h2>Stage 2 Asset</h2>
+<h2>Picture 2</h2>
 
 <label>Image URL</label>
 <input id="stage2Image">
 
-<label>Coin Value</label>
-<input id="stage2Value"
-       type="number">
+<label>Purchase Price</label>
+<input
+    id="stage2Value"
+    type="number">
 
-<h2>Stage 3 Asset</h2>
+<h2>Picture 3</h2>
 
 <label>Image URL</label>
 <input id="stage3Image">
 
-<label>Coin Value</label>
-<input id="stage3Value"
-       type="number">
+<label>Purchase Price</label>
+<input
+    id="stage3Value"
+    type="number">
 
-<h2>Stage 4 Asset</h2>
+<h2>Picture 4</h2>
 
 <label>Image URL</label>
 <input id="stage4Image">
 
-<label>Coin Value</label>
-<input id="stage4Value"
-       type="number">
+<label>Purchase Price</label>
+<input
+    id="stage4Value"
+    type="number">
 
-<h2>Stage 5 Asset</h2>
+<h2>Picture 5</h2>
 
 <label>Image URL</label>
 <input id="stage5Image">
 
-<label>Coin Value</label>
-<input id="stage5Value"
-       type="number">
+<label>Purchase Price</label>
+<input
+    id="stage5Value"
+    type="number">
 
-<h2>Bonus Reward</h2>
+<h2>Victory Bonus</h2>
 
 <label>Bonus Image URL</label>
 <input id="bonusImage">
@@ -174,139 +177,92 @@ function generateLink(){
     const data = {
 
         opponent:
-
             document.getElementById(
                 "opponentName"
-            ).value ||
-
-            "Computer",
+            ).value || "Computer",
 
         cover: {
-
             image:
-
                 document.getElementById(
                     "coverImage"
-                ).value,
-
-            value:
-
-                Number(
-
-                    document.getElementById(
-                        "coverValue"
-                    ).value
-
-                )
-
+                ).value
         },
 
         assets: [
 
             {
-
                 image:
-
                     document.getElementById(
                         "stage1Image"
                     ).value,
 
                 value:
-
                     Number(
-
                         document.getElementById(
                             "stage1Value"
                         ).value
-
                     )
-
             },
 
             {
-
                 image:
-
                     document.getElementById(
                         "stage2Image"
                     ).value,
 
                 value:
-
                     Number(
-
                         document.getElementById(
                             "stage2Value"
                         ).value
-
                     )
-
             },
 
             {
-
                 image:
-
                     document.getElementById(
                         "stage3Image"
                     ).value,
 
                 value:
-
                     Number(
-
                         document.getElementById(
                             "stage3Value"
                         ).value
-
                     )
-
             },
 
             {
-
                 image:
-
                     document.getElementById(
                         "stage4Image"
                     ).value,
 
                 value:
-
                     Number(
-
                         document.getElementById(
                             "stage4Value"
                         ).value
-
                     )
-
             },
 
             {
-
                 image:
-
                     document.getElementById(
                         "stage5Image"
                     ).value,
 
                 value:
-
                     Number(
-
                         document.getElementById(
                             "stage5Value"
                         ).value
-
                     )
-
             }
 
         ],
 
         bonus:
-
             document.getElementById(
                 "bonusImage"
             ).value
@@ -314,25 +270,24 @@ function generateLink(){
     };
 
     const compressed =
-
         LZString.compressToEncodedURIComponent(
-
             JSON.stringify(data)
-
         );
+
+    const basePath =
+        location.pathname
+            .replace("index.html","")
+            .replace(/\/$/,"");
 
     const url =
 
-    location.origin +
+        location.origin +
 
-    location.pathname.replace(
-        /\/$/,
-        "/play.html"
-    ) +
+        basePath +
 
-    "#" +
+        "/play.html#" +
 
-    compressed;
+        compressed;
 
     document.getElementById(
         "output"
@@ -341,13 +296,14 @@ function generateLink(){
     `
     <h2>Share Link</h2>
 
-    <textarea
-        id="generatedLink">${url}</textarea>
+    <textarea id="generatedLink">${url}</textarea>
 
     <button
         class="copyBtn"
         onclick="copyLink()">
+
         Copy Link
+
     </button>
     `;
 
@@ -356,13 +312,13 @@ function generateLink(){
 function copyLink(){
 
     const text =
-
         document.getElementById(
             "generatedLink"
         ).value;
 
-    navigator.clipboard
-        .writeText(text);
+    navigator.clipboard.writeText(
+        text
+    );
 
     alert(
         "Link copied!"
