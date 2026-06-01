@@ -2,24 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width,initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dice Lockbox</title>
 
 <style>
 
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-    font-family:Arial,Helvetica,sans-serif;
-}
-
 body{
     background:#111;
     color:white;
+    font-family:Arial,sans-serif;
     padding:20px;
+    margin:0;
 }
 
 .container{
@@ -29,13 +22,17 @@ body{
 
 .card{
     background:#1c1c1c;
-    border-radius:12px;
     padding:20px;
+    border-radius:12px;
     margin-bottom:20px;
 }
 
 .center{
     text-align:center;
+}
+
+.hidden{
+    display:none;
 }
 
 img{
@@ -44,13 +41,13 @@ img{
 }
 
 button{
-    border:none;
-    border-radius:10px;
-    padding:15px;
-    cursor:pointer;
     background:#00b894;
     color:white;
+    border:none;
+    padding:15px 25px;
+    border-radius:10px;
     font-size:18px;
+    cursor:pointer;
 }
 
 button:hover{
@@ -59,39 +56,20 @@ button:hover{
 
 .coins{
     font-size:24px;
-    margin:10px 0;
-}
-
-.rolls{
-    font-size:32px;
-    margin-top:20px;
-}
-
-#coverImage{
-    max-height:400px;
-    object-fit:contain;
+    margin:15px 0;
 }
 
 .gallery{
     display:grid;
-    grid-template-columns:
-        repeat(auto-fit,minmax(150px,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
     gap:10px;
     margin-top:20px;
 }
 
 .gallery img{
+    width:100%;
     height:200px;
     object-fit:cover;
-}
-
-.hidden{
-    display:none;
-}
-
-.status{
-    margin-top:20px;
-    font-size:20px;
 }
 
 </style>
@@ -101,109 +79,82 @@ button:hover{
 <div class="container">
 
 <div id="loading" class="card center">
+Loading...
+</div>
 
-    Loading...
+<div id="coverScreen" class="card center hidden">
+
+    <img id="coverImage">
+
+    <br><br>
+
+    <button onclick="startGame()">
+        Start Game
+    </button>
 
 </div>
 
-<div id="gameScreen"
-class="card hidden">
+<div id="gameScreen" class="card center hidden">
 
-    <div class="center">
-
-        <img id="coverImage">
-
-        <div class="coins">
-            Player Coins:
-            <span id="playerCoins">
-                100
-            </span>
-        </div>
-
-        <div class="coins">
-            Computer Coins:
-            <span id="computerCoins">
-                0
-            </span>
-        </div>
-
-        <div class="status">
-
-            Roll Cost:
-            20 Coins
-
-        </div>
-
-        <br>
-
-        <button
-        onclick="rollDice()">
-
-            ROLL
-
-        </button>
-
-        <div
-        id="rollResults"
-        class="rolls">
-
-            🎲 -
-            vs
-            🎲 -
-
-        </div>
-
-        <div
-        id="statusMessage"
-        class="status">
-
-        </div>
-
+    <div class="coins">
+        Player Coins:
+        <span id="playerCoins">100</span>
     </div>
 
-</div>
+    <div class="coins">
+        Computer Coins:
+        <span id="computerCoins">0</span>
+    </div>
 
-<div
-id="assetsScreen"
-class="card hidden">
-
-    <h2>
-        Assets Acquired
-    </h2>
+    <button onclick="rollDice()">
+        Roll Dice
+    </button>
 
     <div
-    id="assetsGallery"
-    class="gallery">
+        id="diceResult"
+        style="margin-top:20px;font-size:20px;">
+    </div>
 
+    <div
+        id="gallery"
+        class="gallery">
     </div>
 
 </div>
 
-<div
-id="victoryScreen"
-class="card hidden center">
+<div id="assetReveal" class="card center hidden">
+
+    <h2>
+        Computer Sold An Asset
+    </h2>
+
+    <img id="soldImage">
+
+    <p id="soldValue"></p>
+
+    <button onclick="continueGame()">
+        Continue
+    </button>
+
+</div>
+
+<div id="victoryScreen" class="card center hidden">
 
     <h1>
-        YOU WIN
+        You Win!
     </h1>
 
     <br>
 
     <img id="bonusImage">
 
-    <h2
-    style="
-    margin-top:20px;
-    ">
-
+    <h2>
         Complete Collection
-
     </h2>
 
     <div
-    id="finalGallery"
-    class="gallery">
-
+        id="finalGallery"
+        class="gallery">
     </div>
 
 </div>
