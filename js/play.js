@@ -6,48 +6,89 @@ let computerCoins = 0;
 let currentAsset = 0;
 let acquiredAssets = [];
 
-const STORAGE_KEY = "dice-lockbox-save";
+let playerDice = [];
+let playerTotal = 0;
 
-document.addEventListener("DOMContentLoaded", init);
+const STORAGE_KEY = "dice-lockbox-save-v2";
 
-function init() {
-    const hash = window.location.hash.replace("#", "");
+const diceFaces = [
+    "",
+    "⚀",
+    "⚁",
+    "⚂",
+    "⚃",
+    "⚄",
+    "⚅"
+];
 
-    if (!hash) {
-        document.getElementById("loading").innerHTML =
-            "<h2>No lockbox data found.</h2>";
+document.addEventListener(
+    "DOMContentLoaded",
+    init
+);
+
+function init(){
+
+    const hash =
+        window.location.hash.replace(
+            "#",
+            ""
+        );
+
+    if(!hash){
+
+        document.getElementById(
+            "loading"
+        ).innerHTML =
+        "<h2>No lockbox data found.</h2>";
+
         return;
+
     }
 
-    try {
-        const json =
-            LZString.decompressFromEncodedURIComponent(hash);
+    try{
 
-        gameData = JSON.parse(json);
+        const json =
+            LZString.decompressFromEncodedURIComponent(
+                hash
+            );
+
+        gameData =
+            JSON.parse(json);
 
         loadProgress();
 
-    } catch (err) {
+    }
+    catch(err){
 
         console.error(err);
 
-        document.getElementById("loading").innerHTML =
-            "<h2>Invalid lockbox link.</h2>";
+        document.getElementById(
+            "loading"
+        ).innerHTML =
+        "<h2>Invalid lockbox link.</h2>";
+
     }
+
 }
 
-function loadProgress() {
+function loadProgress(){
 
     const save =
-        localStorage.getItem(STORAGE_KEY);
+        localStorage.getItem(
+            STORAGE_KEY
+        );
 
-    if (save) {
+    if(save){
 
-        try {
+        try{
 
-            const data = JSON.parse(save);
+            const data =
+                JSON.parse(save);
 
-            if (data.hash === window.location.hash) {
+            if(
+                data.hash ===
+                window.location.hash
+            ){
 
                 playerCoins =
                     data.playerCoins;
@@ -60,52 +101,79 @@ function loadProgress() {
 
                 acquiredAssets =
                     data.acquiredAssets || [];
+
             }
 
-        } catch (e) {}
+        }
+        catch(e){}
+
     }
 
-    document
-        .getElementById("loading")
-        .classList.add("hidden");
+    document.getElementById(
+        "loading"
+    ).classList.add(
+        "hidden"
+    );
 
-    if (computerCoins === 0) {
+    if(computerCoins === 0){
+
         showCover();
-    } else {
-        startGameUI();
+
     }
+    else{
+
+        startGameUI();
+
+    }
+
 }
 
-function saveProgress() {
+function saveProgress(){
 
     localStorage.setItem(
         STORAGE_KEY,
+
         JSON.stringify({
-            hash: window.location.hash,
+
+            hash:
+                window.location.hash,
+
             playerCoins,
+
             computerCoins,
+
             currentAsset,
+
             acquiredAssets
+
         })
+
     );
+
 }
 
-function showCover() {
+function showCover(){
 
-    document
-        .getElementById("coverScreen")
-        .classList.remove("hidden");
+    document.getElementById(
+        "coverScreen"
+    ).classList.remove(
+        "hidden"
+    );
 
-    document
-        .getElementById("coverImage")
-        .src = gameData.cover.image;
+    document.getElementById(
+        "coverImage"
+    ).src =
+        gameData.cover.image;
+
 }
 
-function startGame() {
+function startGame(){
 
-    document
-        .getElementById("coverScreen")
-        .classList.add("hidden");
+    document.getElementById(
+        "coverScreen"
+    ).classList.add(
+        "hidden"
+    );
 
     playerCoins = 100;
 
@@ -119,122 +187,318 @@ function startGame() {
     saveProgress();
 
     startGameUI();
+
 }
 
-function startGameUI() {
+function startGameUI(){
 
-    document
-        .getElementById("gameScreen")
-        .classList.remove("hidden");
+    document.getElementById(
+        "gameScreen"
+    ).classList.remove(
+        "hidden"
+    );
+
+    document.getElementById(
+        "opponentName"
+    ).textContent =
+        gameData.opponent ||
+        "Computer";
+
+    document.getElementById(
+        "resultOpponentName"
+    ).textContent =
+        `${gameData.opponent || "Computer"} Roll`;
 
     updateCoins();
 
     renderGallery();
+
+    showRollPhase();
+
 }
 
-function updateCoins() {
+function updateCoins(){
 
-    document
-        .getElementById("playerCoins")
-        .textContent = playerCoins;
+    document.getElementById(
+        "playerCoins"
+    ).textContent =
+        playerCoins;
 
-    document
-        .getElementById("computerCoins")
-        .textContent = computerCoins;
+    document.getElementById(
+        "computerCoins"
+    ).textContent =
+        computerCoins;
+
 }
 
-function rollDice() {
+function showRollPhase(){
 
-    if (playerCoins <= 0) {
+    document.getElementById(
+        "rollPhase"
+    ).classList.remove(
+        "hidden"
+    );
 
-        alert("You ran out of coins.");
+    document.getElementById(
+        "decisionPhase"
+    ).classList.add(
+        "hidden"
+    );
 
-        resetGame();
+}
 
-        return;
-    }
+function rollPlayerDice(){
 
-    while (
-        computerCoins < 20 &&
-        currentAsset < gameData.assets.length
-    ) {
-        autoSellAsset();
-        return;
-    }
+    playerDice = [
+        rollDie(),
+        rollDie()
+    ];
 
-    if (
-        computerCoins <= 0 &&
-        currentAsset >= gameData.assets.length
-    ) {
-        showVictory();
-        return;
-    }
+    playerTotal =
+        playerDice[0] +
+        playerDice[1];
 
-    const playerStake =
-        Math.min(20, playerCoins);
+    document.getElementById(
+        "playerDice"
+    ).textContent =
+        diceFaces[
+            playerDice[0]
+        ] +
+        " " +
+        diceFaces[
+            playerDice[1]
+        ];
 
-    const computerStake =
-        Math.min(20, computerCoins);
+    document.getElementById(
+        "rollPhase"
+    ).classList.add(
+        "hidden"
+    );
 
-    const pot =
-        playerStake + computerStake;
+    document.getElementById(
+        "decisionPhase"
+    ).classList.remove(
+        "hidden"
+    );
 
-    playerCoins -= playerStake;
-    computerCoins -= computerStake;
+}
 
-    const playerRoll =
-        Math.floor(Math.random() * 6) + 1;
+function foldRound(){
 
-    const computerRoll =
-        Math.floor(Math.random() * 6) + 1;
-
-    let result =
-        `You rolled ${playerRoll}. Computer rolled ${computerRoll}. `;
-
-    if (playerRoll > computerRoll) {
-
-        playerCoins += pot;
-
-        result +=
-            `You win ${pot} coins!`;
-
-    } else if (computerRoll > playerRoll) {
-
-        computerCoins += pot;
-
-        result +=
-            `Computer wins ${pot} coins!`;
-
-    } else {
-
-        playerCoins += playerStake;
-        computerCoins += computerStake;
-
-        result += "Tie.";
-    }
-
-    document
-        .getElementById("diceResult")
-        .textContent = result;
+    playerCoins -= 10;
 
     updateCoins();
 
-    if (playerCoins <= 0) {
+    if(playerCoins <= 0){
 
-        alert("You ran out of coins.");
-
-        resetGame();
+        gameOver();
 
         return;
+
     }
 
     saveProgress();
+
+    alert(
+        "You folded and lost 10 coins."
+    );
+
+    showRollPhase();
+
 }
 
-function autoSellAsset() {
+function playRound(betAmount){
+
+    if(
+        playerCoins < betAmount
+    ){
+
+        alert(
+            "Not enough coins."
+        );
+
+        return;
+
+    }
+
+    if(
+        computerCoins <= 0
+    ){
+
+        processComputerLoss();
+
+        return;
+
+    }
+
+    const playerBet =
+        Math.min(
+            betAmount,
+            playerCoins
+        );
+
+    const computerBet =
+        Math.min(
+            betAmount,
+            computerCoins
+        );
+
+    playerCoins -=
+        playerBet;
+
+    computerCoins -=
+        computerBet;
+
+    const computerDice = [
+        rollDie(),
+        rollDie()
+    ];
+
+    const computerTotal =
+        computerDice[0] +
+        computerDice[1];
+
+    const pot =
+        playerBet +
+        computerBet;
+
+    let message = "";
+
+    if(
+        playerTotal >
+        computerTotal
+    ){
+
+        playerCoins += pot;
+
+        message =
+            `You win ${pot} coins!`;
+
+    }
+    else if(
+        computerTotal >
+        playerTotal
+    ){
+
+        computerCoins += pot;
+
+        message =
+            `${gameData.opponent || "Computer"} wins ${pot} coins!`;
+
+    }
+    else{
+
+        playerCoins +=
+            playerBet;
+
+        computerCoins +=
+            computerBet;
+
+        message =
+            "Tie. Bets returned.";
+
+    }
+
+    updateCoins();
+
+    document.getElementById(
+        "resultPlayerDice"
+    ).textContent =
+        diceFaces[
+            playerDice[0]
+        ] +
+        " " +
+        diceFaces[
+            playerDice[1]
+        ];
+
+    document.getElementById(
+        "resultComputerDice"
+    ).textContent =
+        diceFaces[
+            computerDice[0]
+        ] +
+        " " +
+        diceFaces[
+            computerDice[1]
+        ];
+
+    document.getElementById(
+        "resultMessage"
+    ).textContent =
+        message;
+
+    document.getElementById(
+        "gameScreen"
+    ).classList.add(
+        "hidden"
+    );
+
+    document.getElementById(
+        "resultScreen"
+    ).classList.remove(
+        "hidden"
+    );
+
+    saveProgress();
+
+}
+
+function nextRound(){
+
+    document.getElementById(
+        "resultScreen"
+    ).classList.add(
+        "hidden"
+    );
+
+    if(
+        playerCoins <= 0
+    ){
+
+        gameOver();
+
+        return;
+
+    }
+
+    if(
+        computerCoins <= 0
+    ){
+
+        processComputerLoss();
+
+        return;
+
+    }
+
+    document.getElementById(
+        "gameScreen"
+    ).classList.remove(
+        "hidden"
+    );
+
+    showRollPhase();
+
+}
+
+function processComputerLoss(){
+
+    if(
+        currentAsset >=
+        gameData.assets.length
+    ){
+
+        showVictory();
+
+        return;
+
+    }
 
     const asset =
-        gameData.assets[currentAsset];
+        gameData.assets[
+            currentAsset
+        ];
 
     acquiredAssets.push(
         asset.image
@@ -245,108 +509,165 @@ function autoSellAsset() {
 
     currentAsset++;
 
-    saveProgress();
-
-    document
-        .getElementById("gameScreen")
-        .classList.add("hidden");
-
-    document
-        .getElementById("assetReveal")
-        .classList.remove("hidden");
-
-    document
-        .getElementById("soldImage")
-        .src = asset.image;
-
-    document
-        .getElementById("soldValue")
-        .textContent =
-        `Computer sold asset for ${asset.value} coins`;
-}
-
-function continueGame() {
-
-    document
-        .getElementById("assetReveal")
-        .classList.add("hidden");
-
-    document
-        .getElementById("gameScreen")
-        .classList.remove("hidden");
-
     updateCoins();
 
+    saveProgress();
+
+    document.getElementById(
+        "assetReveal"
+    ).classList.remove(
+        "hidden"
+    );
+
+    document.getElementById(
+        "soldImage"
+    ).src =
+        asset.image;
+
+    document.getElementById(
+        "soldValue"
+    ).textContent =
+        `${gameData.opponent || "Computer"} sold an asset for ${asset.value} coins`;
+
     renderGallery();
+
 }
 
-function renderGallery() {
+function continueGame(){
+
+    document.getElementById(
+        "assetReveal"
+    ).classList.add(
+        "hidden"
+    );
+
+    document.getElementById(
+        "gameScreen"
+    ).classList.remove(
+        "hidden"
+    );
+
+    showRollPhase();
+
+}
+
+function renderGallery(){
 
     const gallery =
-        document.getElementById("gallery");
+        document.getElementById(
+            "gallery"
+        );
 
     gallery.innerHTML = "";
 
-    acquiredAssets.forEach(src => {
+    acquiredAssets.forEach(
+        src => {
 
-        const img =
-            document.createElement("img");
+            const img =
+                document.createElement(
+                    "img"
+                );
 
-        img.src = src;
+            img.src = src;
 
-        gallery.appendChild(img);
-    });
+            gallery.appendChild(
+                img
+            );
+
+        }
+    );
+
 }
 
-function showVictory() {
+function showVictory(){
 
     localStorage.removeItem(
         STORAGE_KEY
     );
 
-    document
-        .getElementById("gameScreen")
-        .classList.add("hidden");
+    document.getElementById(
+        "gameScreen"
+    ).classList.add(
+        "hidden"
+    );
 
-    document
-        .getElementById("assetReveal")
-        .classList.add("hidden");
+    document.getElementById(
+        "assetReveal"
+    ).classList.add(
+        "hidden"
+    );
 
-    document
-        .getElementById("victoryScreen")
-        .classList.remove("hidden");
+    document.getElementById(
+        "resultScreen"
+    ).classList.add(
+        "hidden"
+    );
 
-    document
-        .getElementById("bonusImage")
-        .src = gameData.bonus;
+    document.getElementById(
+        "victoryScreen"
+    ).classList.remove(
+        "hidden"
+    );
+
+    document.getElementById(
+        "bonusImage"
+    ).src =
+        gameData.bonus;
 
     const gallery =
-        document.getElementById("finalGallery");
+        document.getElementById(
+            "finalGallery"
+        );
 
     gallery.innerHTML = "";
 
     const images = [
+
         gameData.cover.image,
+
         ...acquiredAssets,
+
         gameData.bonus
+
     ];
 
-    images.forEach(src => {
+    images.forEach(
+        src => {
 
-        const img =
-            document.createElement("img");
+            const img =
+                document.createElement(
+                    "img"
+                );
 
-        img.src = src;
+            img.src = src;
 
-        gallery.appendChild(img);
-    });
+            gallery.appendChild(
+                img
+            );
+
+        }
+    );
+
 }
 
-function resetGame() {
+function gameOver(){
 
     localStorage.removeItem(
         STORAGE_KEY
     );
 
+    alert(
+        "You ran out of coins. Starting over."
+    );
+
     location.reload();
+
+}
+
+function rollDie(){
+
+    return Math.floor(
+        Math.random() * 6
+    ) + 1;
+
 }
