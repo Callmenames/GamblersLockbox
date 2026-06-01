@@ -1,7 +1,7 @@
 let gameData = null;
 
 let playerCoins = 100;
-let computerCoins = 0;
+let computerCoins = 100;
 
 let currentAsset = 0;
 let acquiredAssets = [];
@@ -9,7 +9,7 @@ let acquiredAssets = [];
 let playerDice = [];
 let playerTotal = 0;
 
-const STORAGE_KEY = "dice-lockbox-save-v2";
+const STORAGE_KEY = "gamblers-lockbox-save-v1";
 
 const diceFaces = [
     "",
@@ -115,7 +115,11 @@ function loadProgress(){
         "hidden"
     );
 
-    if(computerCoins === 0){
+    if(
+        playerCoins === 100 &&
+        computerCoins === 100 &&
+        currentAsset === 0
+    ){
 
         showCover();
 
@@ -176,12 +180,9 @@ function startGame(){
     );
 
     playerCoins = 100;
-
-    computerCoins =
-        gameData.cover.value;
+    computerCoins = 100;
 
     currentAsset = 0;
-
     acquiredAssets = [];
 
     saveProgress();
@@ -210,9 +211,7 @@ function startGameUI(){
         `${gameData.opponent || "Computer"} Roll`;
 
     updateCoins();
-
     renderGallery();
-
     showRollPhase();
 
 }
@@ -261,9 +260,16 @@ function rollPlayerDice(){
     document.getElementById(
         "playerDice"
     ).textContent =
-        diceFaces[playerDice[0]]
-        + " " +
-        diceFaces[playerDice[1]];
+
+        diceFaces[
+            playerDice[0]
+        ] +
+
+        " " +
+
+        diceFaces[
+            playerDice[1]
+        ];
 
     document.getElementById(
         "rollPhase"
@@ -286,10 +292,11 @@ function foldRound(){
 
     updateCoins();
 
-    if(playerCoins <= 0){
+    if(
+        playerCoins <= 0
+    ){
 
         gameOver();
-
         return;
 
     }
@@ -306,7 +313,9 @@ function foldRound(){
 
 function playRound(betAmount){
 
-    if(playerCoins < betAmount){
+    if(
+        playerCoins < betAmount
+    ){
 
         alert(
             "Not enough coins."
@@ -317,10 +326,7 @@ function playRound(betAmount){
     }
 
     const playerBet =
-        Math.min(
-            betAmount,
-            playerCoins
-        );
+        betAmount;
 
     const computerBet =
         Math.min(
@@ -354,7 +360,8 @@ function playRound(betAmount){
         computerTotal
     ){
 
-        playerCoins += pot;
+        playerCoins +=
+            pot;
 
         message =
             `You win ${pot} coins!`;
@@ -365,7 +372,8 @@ function playRound(betAmount){
         playerTotal
     ){
 
-        computerCoins += pot;
+        computerCoins +=
+            pot;
 
         message =
             `${gameData.opponent || "Computer"} wins ${pot} coins!`;
@@ -373,8 +381,11 @@ function playRound(betAmount){
     }
     else{
 
-        playerCoins += playerBet;
-        computerCoins += computerBet;
+        playerCoins +=
+            playerBet;
+
+        computerCoins +=
+            computerBet;
 
         message =
             "Tie. Bets returned.";
@@ -386,16 +397,30 @@ function playRound(betAmount){
     document.getElementById(
         "resultPlayerDice"
     ).textContent =
-        diceFaces[playerDice[0]]
-        + " " +
-        diceFaces[playerDice[1]];
+
+        diceFaces[
+            playerDice[0]
+        ] +
+
+        " " +
+
+        diceFaces[
+            playerDice[1]
+        ];
 
     document.getElementById(
         "resultComputerDice"
     ).textContent =
-        diceFaces[computerDice[0]]
-        + " " +
-        diceFaces[computerDice[1]];
+
+        diceFaces[
+            computerDice[0]
+        ] +
+
+        " " +
+
+        diceFaces[
+            computerDice[1]
+        ];
 
     document.getElementById(
         "resultMessage"
@@ -426,18 +451,20 @@ function nextRound(){
         "hidden"
     );
 
-    if(playerCoins <= 0){
+    if(
+        playerCoins <= 0
+    ){
 
         gameOver();
-
         return;
 
     }
 
-    if(computerCoins <= 0){
+    if(
+        computerCoins <= 0
+    ){
 
         processComputerLoss();
-
         return;
 
     }
@@ -460,7 +487,6 @@ function processComputerLoss(){
     ){
 
         showVictory();
-
         return;
 
     }
@@ -470,24 +496,18 @@ function processComputerLoss(){
             currentAsset
         ];
 
+    playerCoins -=
+        asset.value;
+
     acquiredAssets.push(
         asset.image
     );
-
-    computerCoins +=
-        asset.value;
 
     currentAsset++;
 
     updateCoins();
 
     saveProgress();
-
-    document.getElementById(
-        "assetReveal"
-    ).classList.remove(
-        "hidden"
-    );
 
     document.getElementById(
         "soldImage"
@@ -497,9 +517,24 @@ function processComputerLoss(){
     document.getElementById(
         "soldValue"
     ).textContent =
-        `${gameData.opponent || "Computer"} sold an asset for ${asset.value} coins`;
+
+        `${gameData.opponent || "Computer"} is a loser and is forced to sell you this picture for ${asset.value} coins`;
+
+    document.getElementById(
+        "assetReveal"
+    ).classList.remove(
+        "hidden"
+    );
 
     renderGallery();
+
+    if(
+        playerCoins <= 0
+    ){
+
+        gameOver();
+
+    }
 
 }
 
@@ -595,9 +630,7 @@ function showVictory(){
 
         gameData.cover.image,
 
-        ...acquiredAssets,
-
-        gameData.bonus
+        ...acquiredAssets
 
     ];
 
