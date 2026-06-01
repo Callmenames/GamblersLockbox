@@ -284,8 +284,11 @@ function rollPlayerDice(){
 }
 
 function foldRound(){
+function foldRound(){
 
     playerCoins -= 10;
+
+    computerCoins += 10;
 
     updateCoins();
 
@@ -300,7 +303,7 @@ function foldRound(){
     saveProgress();
 
     alert(
-        "You folded and lost 10 coins."
+        `${gameData.opponent || "Computer"} wins 10 coins.`
     );
 
     showRollPhase();
