@@ -65,6 +65,261 @@ button:hover{
 
 #output{
     margin-top:20px;
+}
+
+textarea{
+    width:100%;
+    height:150px;
+    padding:10px;
+    border-radius:8px;
+    border:none;
+    resize:vertical;
+}
+
+.copyBtn{
+    margin-top:10px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<h1>Dice Lockbox Creator</h1>
+
+<h2>Cover Asset</h2>
+
+<label>Cover Image URL</label>
+<input id="coverImage">
+
+<label>Starting Coin Value</label>
+<input id="coverValue" type="number">
+
+<h2>Stage 1 Asset</h2>
+
+<label>Image URL</label>
+<input id="stage1Image">
+
+<label>Coin Value</label>
+<input id="stage1Value" type="number">
+
+<h2>Stage 2 Asset</h2>
+
+<label>Image URL</label>
+<input id="stage2Image">
+
+<label>Coin Value</label>
+<input id="stage2Value" type="number">
+
+<h2>Stage 3 Asset</h2>
+
+<label>Image URL</label>
+<input id="stage3Image">
+
+<label>Coin Value</label>
+<input id="stage3Value" type="number">
+
+<h2>Stage 4 Asset</h2>
+
+<label>Image URL</label>
+<input id="stage4Image">
+
+<label>Coin Value</label>
+<input id="stage4Value" type="number">
+
+<h2>Stage 5 Asset</h2>
+
+<label>Image URL</label>
+<input id="stage5Image">
+
+<label>Coin Value</label>
+<input id="stage5Value" type="number">
+
+<h2>Bonus Reward</h2>
+
+<label>Bonus Image URL</label>
+<input id="bonusImage">
+
+<br>
+
+<button onclick="generateLink()">
+Generate Lockbox Link
+</button>
+
+<div id="output"></div>
+
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
+
+<script>
+
+function generateLink(){
+
+    const data = {
+
+        cover: {
+
+            image:
+                document.getElementById(
+                    "coverImage"
+                ).value,
+
+            value:
+                Number(
+                    document.getElementById(
+                        "coverValue"
+                    ).value
+                )
+
+        },
+
+        assets: [
+
+            {
+                image:
+                    document.getElementById(
+                        "stage1Image"
+                    ).value,
+
+                value:
+                    Number(
+                        document.getElementById(
+                            "stage1Value"
+                        ).value
+                    )
+            },
+
+            {
+                image:
+                    document.getElementById(
+                        "stage2Image"
+                    ).value,
+
+                value:
+                    Number(
+                        document.getElementById(
+                            "stage2Value"
+                        ).value
+                    )
+            },
+
+            {
+                image:
+                    document.getElementById(
+                        "stage3Image"
+                    ).value,
+
+                value:
+                    Number(
+                        document.getElementById(
+                            "stage3Value"
+                        ).value
+                    )
+            },
+
+            {
+                image:
+                    document.getElementById(
+                        "stage4Image"
+                    ).value,
+
+                value:
+                    Number(
+                        document.getElementById(
+                            "stage4Value"
+                        ).value
+                    )
+            },
+
+            {
+                image:
+                    document.getElementById(
+                        "stage5Image"
+                    ).value,
+
+                value:
+                    Number(
+                        document.getElementById(
+                            "stage5Value"
+                        ).value
+                    )
+            }
+
+        ],
+
+        bonus:
+            document.getElementById(
+                "bonusImage"
+            ).value
+
+    };
+
+    const compressed =
+        LZString
+        .compressToEncodedURIComponent(
+            JSON.stringify(data)
+        );
+
+    const url =
+
+        location.origin +
+
+        location.pathname.replace(
+            "index.html",
+            "play.html"
+        ) +
+
+        "#" +
+
+        compressed;
+
+    document.getElementById(
+        "output"
+    ).innerHTML =
+
+    `
+    <h2>Share Link</h2>
+
+    <textarea id="generatedLink">${url}</textarea>
+
+    <button
+        class="copyBtn"
+        onclick="copyLink()">
+        Copy Link
+    </button>
+    `;
+
+}
+
+function copyLink(){
+
+    const textarea =
+        document.getElementById(
+            "generatedLink"
+        );
+
+    textarea.select();
+
+    document.execCommand(
+        "copy"
+    );
+
+    alert(
+        "Link copied!"
+    );
+
+}
+
+</script>
+
+</body>
+</html>    margin-top:20px;
     word-break:break-all;
 }
 
