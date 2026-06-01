@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0">
+
+<title>Dice Lockbox</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#111;
+    color:white;
+    padding:20px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+}
+
+.card{
+    background:#1c1c1c;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:20px;
+}
+
+.center{
+    text-align:center;
+}
+
+img{
+    max-width:100%;
+    border-radius:10px;
+}
+
+button{
+    border:none;
+    border-radius:10px;
+    padding:15px;
+    cursor:pointer;
+    background:#00b894;
+    color:white;
+    font-size:18px;
+}
+
+button:hover{
+    background:#00a383;
+}
+
+.coins{
+    font-size:24px;
+    margin:10px 0;
+}
+
+.rolls{
+    font-size:32px;
+    margin-top:20px;
+}
+
+#coverImage{
+    max-height:400px;
+    object-fit:contain;
+}
+
+.gallery{
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(150px,1fr));
+    gap:10px;
+    margin-top:20px;
+}
+
+.gallery img{
+    height:200px;
+    object-fit:cover;
+}
+
+.hidden{
+    display:none;
+}
+
+.status{
+    margin-top:20px;
+    font-size:20px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div id="loading" class="card center">
+
+    Loading...
+
+</div>
+
+<div id="gameScreen"
+class="card hidden">
+
+    <div class="center">
+
+        <img id="coverImage">
+
+        <div class="coins">
+            Player Coins:
+            <span id="playerCoins">
+                100
+            </span>
+        </div>
+
+        <div class="coins">
+            Computer Coins:
+            <span id="computerCoins">
+                0
+            </span>
+        </div>
+
+        <div class="status">
+
+            Roll Cost:
+            20 Coins
+
+        </div>
+
+        <br>
+
+        <button
+        onclick="rollDice()">
+
+            ROLL
+
+        </button>
+
+        <div
+        id="rollResults"
+        class="rolls">
+
+            🎲 -
+            vs
+            🎲 -
+
+        </div>
+
+        <div
+        id="statusMessage"
+        class="status">
+
+        </div>
+
+    </div>
+
+</div>
+
+<div
+id="assetsScreen"
+class="card hidden">
+
+    <h2>
+        Assets Acquired
+    </h2>
+
+    <div
+    id="assetsGallery"
+    class="gallery">
+
+    </div>
+
+</div>
+
+<div
+id="victoryScreen"
+class="card hidden center">
+
+    <h1>
+        YOU WIN
+    </h1>
+
+    <br>
+
+    <img id="bonusImage">
+
+    <h2
+    style="
+    margin-top:20px;
+    ">
+
+        Complete Collection
+
+    </h2>
+
+    <div
+    id="finalGallery"
+    class="gallery">
+
+    </div>
+
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
+<script src="js/play.js"></script>
+
+</body>
+</html>
